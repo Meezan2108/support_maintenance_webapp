@@ -1,0 +1,1198 @@
+/**
+ * *************
+ *
+ * USER & ROLE & MENU
+ *
+ * *************
+ */
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(255) [default: NULL]
+  "division" NVARCHAR(255) [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "position" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: users.id < model_has_roles.model_id
+
+Table "model_has_roles" {
+  "role_id" BIGINT [not null]
+  "model_type" NVARCHAR(255) [not null]
+  "model_id" BIGINT [not null]
+
+Indexes {
+  (model_id, model_type, role_id) [pk]
+}
+}
+
+Ref: roles.id < model_has_roles.role_id
+
+Table "roles" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: roles.id < role_has_permissions.role_id
+
+Table "role_has_permissions" {
+  "permission_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+
+Indexes {
+  (permission_id, role_id) [pk]
+}
+}
+
+Ref: permissions.id < role_has_permissions.permission_id
+
+Table "permissions" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "menu" {
+  "id" BIGINT [not null]
+  "parent_id" INT [not null]
+  "code" NVARCHAR(255) [not null]
+  "name" NVARCHAR(255) [not null]
+  "icon" NVARCHAR(255) [not null]
+  "description" NVARCHAR(max) [not null]
+  "order" NVARCHAR(255) [not null]
+  "type" INT [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: menu.id < menu_has_permission.menu_id
+
+Table "menu_has_permission" {
+  "permission_id" BIGINT [not null]
+  "menu_id" BIGINT [not null]
+}
+
+Ref: permissions.id < menu_has_permission.permission_id
+
+/**
+ * *************
+ *
+ * PROPOSAL
+ *
+ * *************
+ */
+
+Table "ref_project_cost_series" {
+  "id" BIGINT [not null]
+  "act_code" NVARCHAR(255) [not null]
+  "jseries_code" NVARCHAR(255) [not null]
+  "vseries_code" NVARCHAR(255) [not null]
+  "sort" NVARCHAR(255) [not null]
+  "description" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: proposal_project_cost.ref_project_cost_series_id > ref_project_cost_series.id
+
+Table "proposal" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "propsal_type" INT [not null]
+  "ref_type_of_funding_id" NVARCHAR(255) [not null]
+  "project_leader_type" INT [not null]
+  "project_title" NVARCHAR(255) [not null]
+  "project_number" NVARCHAR(255) [not null]
+  "project_leader_name" NVARCHAR(255) [not null]
+  "project_leader_nric" NVARCHAR(255) [not null]
+  "position" NVARCHAR(255) [not null]
+  "grade" NVARCHAR(255) [not null]
+  "working_address" NVARCHAR(255) [not null]
+  "keywords" NVARCHAR(255) [not null]
+  "specific_objective" NVARCHAR(255) [not null]
+  "ref_research_type_id" INT [not null]
+  "ref_research_cluster_id" INT [not null]
+  "ref_seo_category_id" INT [not null]
+  "ref_seo_group_id" INT [not null]
+  "ref_seo_area_id" INT [not null]
+
+  "research_location" NVARCHAR(255) [not null]
+  "project_summary" NVARCHAR(max) [not null]
+  "project_statement" NVARCHAR(max) [not null]
+  "hypothesis" NVARCHAR(max) [not null]
+  "research_question" NVARCHAR(max) [not null]
+  "literatur_review" NVARCHAR(max) [not null]
+  "relevance_goverment_policy" NVARCHAR(max) [not null]
+  "reference" NVARCHAR(max) [not null]
+  "related_research" NVARCHAR(max) [not null]
+  "research_methodolgy" NVARCHAR(max) [not null]
+
+  "risk_factor" NVARCHAR(max) [not null]
+  "risk_technical" NVARCHAR(max) [not null]
+  "risk_timing" NVARCHAR(max) [not null]
+  "risk_budget" NVARCHAR(max) [not null]
+
+  "schedule_start_date" DATE [not null]
+  "schedule_completion_date" DATE [not null]
+  "schedule_duration" INT [not null]
+
+  "economic_contributions" NVARCHAR(max) [not null]
+  "approval_status" INT [not null]
+  "project_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  user_id
+  ref_type_of_funding_id
+}
+}
+
+
+Ref: proposal.id < proposal_project_team.proposal_id
+Ref: proposal.id < proposal_researcher.proposal_id
+Ref: proposal.id < proposal_project_cost.proposal_id
+Ref: proposal.id < proposal_research_field.proposal_id
+Ref: proposal.id < proposal_project_activities.proposal_id
+Ref: proposal.id < proposal_milestone.proposal_id
+Ref: proposal.id < proposal_benefits.proposal_id
+Ref: proposal.id < proposal_colaboration.proposal_id
+
+Table "proposal_project_cost" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "ref_project_cost_series_id" BIGINT [not null]
+  "description" NVARCHAR(max)
+  "cost" BIGINT [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+  ref_project_cost_series_id
+}
+}
+
+Table "proposal_project_cost_detail" {
+  "id" BIGINT [not null]
+  "proposal_project_cost_id" BIGINT [not null]
+  "year" INT [not null]
+  "cost" BIGINT [not null]
+
+Indexes {
+  id [pk]
+  proposal_project_cost_id
+}
+}
+
+Ref: proposal_project_cost.id < proposal_project_cost_detail.proposal_project_cost_id
+
+Table "proposal_project_team" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "type" INT [not null]
+  "position" NVARCHAR(255) [null]
+  "name" NVARCHAR(255) [not null]
+  "organization" NVARCHAR(255) [not null]
+  "man_month" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+Table "proposal_researcher" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "name" NVARCHAR(max) [not null]
+  "division" NVARCHAR(max) [not null]
+  "institution" NVARCHAR(max) [not null]
+  "tel_no" NVARCHAR(max) [not null]
+  "fax_no" NVARCHAR(max) [not null]
+  "email" NVARCHAR(max) [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+Table "proposal_research_field" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "type" INT [not null]
+  "ref_for_category_id" NVARCHAR(255) [not null]
+  "ref_for_group_id" NVARCHAR(255) [not null]
+  "ref_for_area_id" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+  type
+  ref_for_category_id
+  ref_for_group_id
+  ref_for_area_id
+}
+}
+
+Table "proposal_project_activities" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "activities" NVARCHAR(max)
+  "from" DATE
+  "to" DATE
+  "order" INT [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+
+Table "proposal_milestone" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "activities" NVARCHAR(max)
+  "from" DATE
+  "to" DATE
+  "is_achieved" INT [null]
+  "completion_date" DATE [null]
+  "order" INT [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+Table "proposal_benefits" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "ref_proposal_benefits_category_id" NVARCHAR(255)
+  "quantity" BIGINT [not null]
+  "details" NVARCHAR(max)
+}
+
+
+Table "proposal_colaboration" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "type" INT [not null] // 1: Institution, 2: Industries
+  "name" NVARCHAR(255) [not null]
+  "role" NVARCHAR(255) [not null]
+  "other" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+Table "evaluation" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "evaluator_id" BIGINT [not null] // alias : user_id
+  "date_evaluation" DATE [not null]
+  "action_to_take" INT [not null]
+  "comments" NVARCHAR(max) [null]
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_id
+    evaluator_id
+  }
+}
+
+Table "evaluation_answer" {
+  "id" BIGINT [not null]
+  "evaluation_id" BIGINT [not null]
+  "ref_answer_category_id" BIGINT [not null]
+  "answer" NVARCHAR(max)
+
+  Indexes {
+    id [pk]
+    evaluation_id
+  }
+}
+
+Table "evaluation_rec_fund" {
+    "id" BIGINT [not null]
+    "evaluation_id" BIGINT [not null]
+    "ref_project_cost_series_id" BIGINT [not null]
+    "Year" INT [not null]
+    "Cost" BIGINT [not null]
+
+    Indexes {
+      id [pk]
+      evaluation_id
+      ref_project_cost_series_id
+    }
+}
+
+Ref: evaluation.id < evaluation_answer.evaluation_id
+Ref: evaluation_answer.ref_answer_category_id > ref_evaluation_answer_category.id
+Ref: evaluation.proposal_id > proposal.id
+Ref: evaluation.id < evaluation_rec_fund.evaluation_id
+Ref: evaluation_rec_fund.ref_project_cost_series_id > ref_project_cost_series.id
+
+
+/**
+ * ******************
+ *
+ * Start Report Table
+ *
+ * ******************
+ */
+
+
+Table report_milestone {
+  "id" BIGINT [not null]
+  "proposal_milestone_id" BIGINT [not null]
+
+  "ipr" NVARCHAR(max) [null]
+  "publication" NVARCHAR(max) [null]
+  "expertise_development" NVARCHAR(max) [null]
+  "prototype" NVARCHAR(max) [null]
+  "commercialisation" NVARCHAR(max) [null]
+
+  "comments" NVARCHAR(max)
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_milestone_id
+  }
+}
+
+ref: report_milestone.proposal_milestone_id - proposal_milestone.id
+
+
+Table "report_quarterly_financial" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "total_recieved" BIGINT [not null]
+  "total_expenditure" BIGINT
+  "year" INT [not null]
+  "quarter" INT [not null]
+  "is_inline_plan" INT [not null]
+  "reasons" NVARCHAR(max) [null]
+  "proposed_action" NVARCHAR(max) [null]
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Table "report_qf_detail" {
+  "id" BIGINT [not null]
+  "report_quarterly_financial_id" BIGINT [not null]
+  "ref_project_cost_series_id" BIGINT [not null]
+  "total_approved" BIGINT [not null]
+  "total_allocation" BIGINT [not null]
+  "total_cumulative" BIGINT [not null]
+
+  Indexes {
+    id [pk]
+    report_quarterly_financial_id
+    ref_project_cost_series_id
+  }
+}
+
+Ref: report_quarterly_financial.proposal_id > proposal.id
+Ref: report_qf_detail.report_quarterly_financial_id > report_quarterly_financial.id
+Ref: report_qf_detail.ref_project_cost_series_id > ref_project_cost_series.id
+
+
+Table "report_research_progress" {
+  "id" BIGINT [not null]
+  "ref_report_type_id" INT [not null]
+  "proposal_id" BIGINT [not null]
+  "focus_area" NVARCHAR(max) [not null]
+  "issue" NVARCHAR(max) [not null]
+  "strategy" NVARCHAR(max) [not null]
+  "program" NVARCHAR(max) [not null]
+  "date" NVARCHAR(max) [not null]
+  "background" NNVARCHAR(max) [not null]
+  "result" NVARCHAR(max) [not null]
+  "summary" NVARCHAR(max) [not null]
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+    ref_report_type_id
+  }
+}
+
+Ref: report_research_progress.proposal_id > proposal.id
+
+Table "extension_project" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "justification" NVARCHAR(max) [not null]
+  "new_fund" NVARCHAR(max) [not null]
+  "duration" INT [not null]
+  "date_end_extension" DATE [not null]
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: extension_project.id < grantchartable.grantchartable_id
+Ref: extension_project.proposal_id > proposal.id
+
+Table "grantchartable" {
+  "id" BIGINT [not null]
+  "grantchartable_type" NVARCHAR(255) [not null]
+  "grantchartable_id" BIGINT [not null]
+  "category" INT [null]
+  "description" NVARCHAR(max)
+  "start" DATE
+  "end" DATE
+  "order" INT
+  "options" NVARCHAR(max) // json
+
+  Indexes {
+    id [pk]
+    grantchartable_type
+    grantchartable_id
+  }
+}
+
+Table "approvable" {
+  "id" BIGINT [not null]
+  "approvable_type" NVARCHAR(255) [not null]
+  "approvable_id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+  "status" INT [not null]
+  "comments" NVARCHAR(max)
+  "options" NVARCHAR(max)
+  "date" DATE [not null]
+  "version" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    approvable_type
+    approvable_id
+  }
+}
+
+Ref: approvable.approvable_id > proposal.id
+Ref: approvable.approvable_id > evaluation.id
+Ref: approvable.approvable_id > report_milestone.id
+Ref: approvable.approvable_id > report_quarterly_financial.id
+Ref: approvable.approvable_id > extension_project.id
+Ref: approvable.approvable_id > report_end_project.id
+Ref: approvable.user_id > users.id
+Ref: approvable.role_id > roles.id
+
+Table "report_end_project" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "project_duration" INT [not null]
+  "budget_approved" BIGINT [not null]
+
+  "priority_area" NVARCHAR(255)
+
+  "original_objectives" NVARCHAR(max)
+  "objectives_achieved" NVARCHAR(max)
+  "objectives_not_achieved" NVARCHAR(max)
+
+  "tech_approach" NVARCHAR(max)
+  "asses_research" NVARCHAR(max)
+  "asses_schedule" NVARCHAR(max)
+  "asses_cost" NVARCHAR(max)
+  "additional_fund" NVARCHAR(max)
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+
+
+
+Table "report_eop_project_team" {
+  "id" BIGINT [not null]
+  "report_end_project_id" BIGINT [not null]
+  "type" INT [not null]
+  "name" NVARCHAR(255) [not null]
+  "organization" NVARCHAR(255) [not null]
+  "man_month" NVARCHAR(255) [not null]
+
+  Indexes {
+    id [pk]
+    report_end_project_id
+  }
+}
+
+Table "report_eop_benefit" {
+  "id" BIGINT [not null]
+  "report_end_project_id" BIGINT [not null]
+  "ref_report_eop_benefits_question_id" INT [not null]
+  "value" NVARCHAR(max)
+
+  Indexes {
+    id [pk]
+    report_end_project_id
+    ref_report_eop_benefits_question_id
+  }
+}
+
+
+
+Ref: report_end_project.proposal_id > proposal.id
+
+Ref: report_end_project.id < report_eop_project_team.report_end_project_id
+Ref: report_end_project.id < report_eop_benefit.report_end_project_id
+
+
+Ref: report_eop_benefit.ref_report_eop_benefits_question_id > ref_report_eop_benefits_question.id
+Ref: ref_report_eop_benefits_question.ref_report_eop_benefits_section_id > ref_report_eop_benefits_section.id
+Ref: ref_report_eop_benefits_section.ref_report_eop_benefits_group_id > ref_report_eop_benefits_group.id
+
+/**
+ * ***************
+ *
+ * R&D LKM KPI Monitoring
+ *
+ * ***************
+ */
+
+Table "publication" {
+  "id" BIGINT [not null]
+  "proposal_id" BIBIGINT [not null]
+  "title" NVARCHAR(255) [not null]
+  "ref_pub_type_id" INT [not null]
+  "publisher" NVARCHAR(255) [not null]
+  "date_published" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+
+}
+
+Ref: publication.proposal_id > proposal.id
+Ref: publication.ref_pub_type_id > ref_pub_type.id
+
+Table "recognition" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "recognition" NVARCHAR(max) [not null]
+  "type" INT [not null] // local|international
+  "file" NVARCHAR(max) [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: recognition.proposal_id > proposal.id
+
+Table "output_rnd" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "output" NVARCHAR(max) [not null]
+  "type" INT [not null] // product | Technologies
+  "status" INT [not null]
+  "date_output" DATE [not null]
+  "source_project" NVARCHAR(max) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: output_rnd.proposal_id > proposal.id
+
+
+Table "ipr" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "output" NVARCHAR(max) [not null]
+  "ref_patent_id" BIGINT [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: ipr.proposal_id > proposal.id
+Ref: ipr.ref_patent_id > ref_patent.id
+
+
+Table "commercialization" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "category" INT [not null] // Products | Technologies
+  "name" NVARCHAR(max) [not null]
+  "taker" NVARCHAR(max) [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: commercialization.proposal_id > proposal.id
+
+Table "analytical_service_lab" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "no_sample" INT [not null]
+  "no_analysis" INT [not null]
+  "no_analysis_protocol" INT [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: analytical_service_lab.proposal_id > proposal.id
+
+Table "imported_germplasm" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "no_germplasm" BIGINT [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+Ref: imported_germplasm.proposal_id > proposal.id
+
+
+Table "target_kpi" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "year" INT [not null]
+  "period" INT [not null]
+  "category_id" INT [not null]
+  "sub_category_id" INT [not null]
+  "target" INT [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    user_id
+  }
+}
+
+Ref: target_kpi.user_id > users.id
+
+
+/**
+ * ***************
+ *
+ * Start Ref Table
+ *
+ * ***************
+ */
+
+
+Table "ref_evaluation_answer_category" {
+  "id" INT [not null]
+  "type" INT [not null]
+  "description" NVARCHAR(max) [not null]
+  "options" NVARCHAR(max)
+  "order" INT [not null]
+
+  Indexes {
+    id [pk]
+    type
+  }
+}
+
+Table "ref_proposal_benefits_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "type" INT [not null] // 1: output expected, 2: Human Capital
+  "description" NVARCHAR(max)
+  "created_at" DATETIME [null]
+  "updated_at" DATETIME [null]
+  "deleted_at" DATETIME [null]
+
+  Indexes {
+    id [pk]
+    type
+  }
+}
+
+Table "ref_for_area" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_for_group_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_for_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_for_category_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_for_group" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_for_group_id" INT [default: NULL]
+  "ref_for_category_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_patent" {
+  "id" BIGINT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "ref_pub_type" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_seo_sector" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Table "ref_seo_area" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_group_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+  ref_seo_group_id
+}
+}
+
+Table "ref_seo_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_category_id" INT [default: NULL]
+  "ref_seo_sector_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_seo_group" {
+  "id" BIGINT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_group_id" INT [default: NULL]
+  "ref_seo_category_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+  ref_seo_group_id
+  ref_seo_category_id
+}
+}
+
+
+
+Table "ref_report_eop_benefits_question" {
+  "id" INT [not null]
+  "ref_report_eop_benefits_section_id" INT [not null]
+  "content" NVARCHAR(max) [not null]
+  "type" NVARCHAR(100) [not null]
+  "options" NVARCHAR(max) [null] // json
+  "order" INT [not null]
+  "rules"  NVARCHAR(max) [null] // json
+
+  Indexes {
+    id [pk]
+    ref_report_eop_benefits_section_id
+  }
+}
+
+Table "ref_report_eop_benefits_section" {
+  "id" BIGINT [not null]
+  "ref_report_eop_benefits_group_id" INT [not null]
+  "title" NVARCHAR(255)  [not null]
+  "description" NVARCHAR(max)  [not null]
+  "order" INT [not null]
+
+  Indexes {
+    id [pk]
+    ref_report_eop_benefits_group_id
+  }
+}
+
+Table "ref_report_eop_benefits_group" {
+  "id" INT [not null]
+  "title" NVARCHAR(255)  [not null]
+  "description" NVARCHAR(max)  [not null]
+  "order" INT [not null]
+
+  Indexes {
+    id [pk]
+  }
+}
+
+Table "ref_type_of_funding" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "type" INT [not null] // trf / external fund
+  "Description" NVARCHAR(255) [not null]
+
+  Indexes {
+    id [pk]
+  }
+}
+
+Table "ref_report_type" {
+  id INT [not null]
+  description NVARCHAR(255) [not null]
+  type INT [not null]
+
+  Indexes {
+    id [pk]
+  }
+}
+
+Table "ref_research_cluster" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Table "ref_research_type" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Table "ref_target_kpi_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "parent_id" INT [null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Ref: ref_type_of_funding.id < proposal.ref_type_of_funding_id
+
+Ref: "ref_for_category"."id" < "proposal_research_field"."ref_for_category_id"
+
+Ref: "ref_for_area"."id" < "proposal_research_field"."ref_for_area_id"
+
+Ref: "ref_for_group"."id" < "proposal_research_field"."ref_for_group_id"
+
+Ref: "ref_seo_area"."id" < "proposal"."ref_seo_area_id"
+
+Ref: "ref_seo_category"."id" < "proposal"."ref_seo_category_id"
+
+Ref: "ref_seo_group"."id" < "proposal"."ref_seo_group_id"
+
+Ref: ref_proposal_benefits_category.id < proposal_benefits.ref_proposal_benefits_category_id
+
+Ref: "users"."id" < "proposal"."user_id"
+
+
+Ref: ref_report_type.id < report_research_progress.ref_report_type_id
+
+Ref: "ref_research_cluster"."id" < "proposal"."ref_research_cluster_id"
+
+Ref: "ref_research_type"."id" < "proposal"."ref_research_type_id"
+
+Ref: "ref_seo_group"."id" < "ref_seo_group"."ref_seo_group_id"
+
+Ref: "ref_seo_category"."id" < "ref_seo_group"."ref_seo_category_id"
+
+Ref: "ref_seo_sector"."id" < "ref_seo_category"."ref_seo_sector_id"
+
+Ref: "ref_seo_category"."id" < "ref_seo_category"."ref_seo_category_id"
+
+Ref: "ref_seo_group"."id" < "ref_seo_area"."ref_seo_group_id"
+
+Ref: "users"."id" < "evaluation"."evaluator_id"
+
+Ref: "ref_for_group"."id" < "ref_for_area"."ref_for_group_id"
+
+Ref: "ref_for_category"."id" < "ref_for_category"."ref_for_category_id"
+
+Ref: "ref_for_group"."id" < "ref_for_group"."ref_for_group_id"
+
+Ref: "ref_for_category"."id" < "ref_for_group"."ref_for_category_id"
+
+Ref: "ref_target_kpi_category"."id" < "target_kpi"."category_id"
+
+Ref: "ref_target_kpi_category"."id" < "target_kpi"."sub_category_id"
+
+Ref: "ref_target_kpi_category"."id" < "ref_target_kpi_category"."parent_id"

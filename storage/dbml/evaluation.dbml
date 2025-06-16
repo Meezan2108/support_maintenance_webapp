@@ -1,0 +1,241 @@
+Table "evaluation" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "evaluator_id" BIGINT [not null] // alias : user_id
+  "date_evaluation" DATE [not null]
+  "action_to_take" INT [not null]
+  "comments" NVARCHAR(max) [null]
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_id
+    evaluator_id
+  }
+}
+
+Table "evaluation_answer" {
+  "id" BIGINT [not null]
+  "evaluation_id" BIGINT [not null]
+  "ref_answer_category_id" BIGINT [not null]
+  "answer" NVARCHAR(max)
+
+  Indexes {
+    id [pk]
+    evaluation_id
+  }
+}
+
+Table "evaluation_rec_fund" {
+    "id" BIGINT [not null]
+    "evaluation_id" BIGINT [not null]
+    "ref_project_cost_series_id" BIGINT [not null]
+    "Year" INT [not null]
+    "Cost" BIGINT [not null]
+
+    Indexes {
+      id [pk]
+      evaluation_id
+      ref_project_cost_series_id
+    }
+}
+
+
+Table "ref_project_cost_series" {
+  "id" BIGINT [not null]
+  "act_code" NVARCHAR(255) [not null]
+  "jseries_code" NVARCHAR(255) [not null]
+  "vseries_code" NVARCHAR(255) [not null]
+  "sort" NVARCHAR(255) [not null]
+  "description" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "proposal" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "propsal_type" INT [not null]
+  "ref_type_of_funding_id" NVARCHAR(255) [not null]
+  "project_leader_type" INT [not null]
+  "project_title" NVARCHAR(255) [not null]
+  "project_number" NVARCHAR(255) [not null]
+  "project_leader_name" NVARCHAR(255) [not null]
+  "project_leader_nric" NVARCHAR(255) [not null]
+  "position" NVARCHAR(255) [not null]
+  "grade" NVARCHAR(255) [not null]
+  "working_address" NVARCHAR(255) [not null]
+  "keywords" NVARCHAR(255) [not null]
+  "specific_objective" NVARCHAR(255) [not null]
+  "ref_research_type_id" INT [not null]
+  "ref_research_cluster_id" INT [not null]
+  "ref_seo_category_id" INT [not null]
+  "ref_seo_group_id" INT [not null]
+  "ref_seo_area_id" INT [not null]
+
+  "research_location" NVARCHAR(255) [not null]
+  "project_summary" NVARCHAR(max) [not null]
+  "project_statement" NVARCHAR(max) [not null]
+  "hypothesis" NVARCHAR(max) [not null]
+  "research_question" NVARCHAR(max) [not null]
+  "literatur_review" NVARCHAR(max) [not null]
+  "relevance_goverment_policy" NVARCHAR(max) [not null]
+  "reference" NVARCHAR(max) [not null]
+  "related_research" NVARCHAR(max) [not null]
+  "research_methodolgy" NVARCHAR(max) [not null]
+
+  "risk_factor" NVARCHAR(max) [not null]
+  "risk_technical" NVARCHAR(max) [not null]
+  "risk_timing" NVARCHAR(max) [not null]
+  "risk_budget" NVARCHAR(max) [not null]
+
+  "schedule_start_date" DATE [not null]
+  "schedule_completion_date" DATE [not null]
+  "schedule_duration" INT [not null]
+
+  "economic_contributions" NVARCHAR(max) [not null]
+  "approval_status" INT [not null]
+  "project_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  user_id
+  ref_type_of_funding_id
+}
+}
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(255) [default: NULL]
+  "division" NVARCHAR(255) [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "position" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "model_has_roles" {
+  "role_id" BIGINT [not null]
+  "model_type" NVARCHAR(255) [not null]
+  "model_id" BIGINT [not null]
+
+Indexes {
+  (model_id, model_type, role_id) [pk]
+}
+}
+
+Ref: roles.id < model_has_roles.role_id
+
+Table "roles" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "approvable" {
+  "id" BIGINT [not null]
+  "approvable_type" NVARCHAR(255) [not null]
+  "approvable_id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+  "status" INT [not null]
+  "comments" NVARCHAR(max)
+  "options" NVARCHAR(max)
+  "date" DATE [not null]
+  "version" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    approvable_type
+    approvable_id
+  }
+}
+
+Table "ref_evaluation_answer_category" {
+  "id" INT [not null]
+  "type" INT [not null]
+  "description" NVARCHAR(max) [not null]
+  "options" NVARCHAR(max)
+  "order" INT [not null]
+
+  Indexes {
+    id [pk]
+    type
+  }
+}
+
+Ref: "proposal"."id" < "evaluation"."proposal_id"
+
+Ref: "evaluation"."id" < "evaluation_rec_fund"."evaluation_id"
+
+Ref: "ref_project_cost_series"."id" < "evaluation_rec_fund"."ref_project_cost_series_id"
+
+Ref: "evaluation"."id" < "evaluation_answer"."evaluation_id"
+
+Ref: "users"."id" < "evaluation"."created_by"
+
+Ref: "users"."id" < "evaluation"."updated_by"
+
+Ref: "users"."id" < "evaluation"."deleted_by"
+
+Ref: "ref_evaluation_answer_category"."id" < "evaluation_answer"."ref_answer_category_id"
+
+Ref: "users"."id" < "evaluation"."evaluator_id"
+
+Ref: "users"."id" < "model_has_roles"."model_id"
+
+Ref: "users"."id" < "approvable"."user_id"
+
+Ref: "roles"."id" < "approvable"."role_id"
+
+Ref: "users"."id" < "approvable"."created_by"
+
+Ref: "users"."id" < "approvable"."updated_by"
+
+Ref: "users"."id" < "approvable"."deleted_by"

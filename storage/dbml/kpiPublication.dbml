@@ -1,0 +1,102 @@
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(64) [default: NULL]
+  "staf_id" NVARCHAR(64) [default: NULL]
+  "ref_division_id" INT [default: NULL]
+  "ref_position_id" INT [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "picture" NVARCHAR(max) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  staf_id
+  ref_division_id
+  ref_position_id
+}
+}
+
+
+Table "kpi_achievement" {
+  "id" BIGINT [not null]
+  "user_id" BIBIGINT [not null]
+  "title" NVARCHAR(255) [not null]
+  "category_id" INT [null]
+  "achievement_id" BIGINT [not null]
+  "achievement_type" NVARCHAR(255) [not null]
+  "status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    user_id
+    category_id
+  }
+
+}
+
+
+Table "publication" {
+  "id" BIGINT [not null]
+  "title" NVARCHAR(255) [not null]
+  "ref_pub_type_id" INT [not null]
+  "publisher" NVARCHAR(255) [not null]
+  "date_published" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+  }
+
+}
+
+Table "ref_pub_type" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: "users"."id" < "kpi_achievement"."user_id"
+
+Ref: "publication"."id" < "kpi_achievement"."achievement_id"
+
+Ref: "ref_pub_type"."id" < "publication"."ref_pub_type_id"
+
+Ref: "users"."id" < "kpi_achievement"."created_by"
+
+Ref: "users"."id" < "kpi_achievement"."updated_by"
+
+Ref: "users"."id" < "kpi_achievement"."deleted_by"

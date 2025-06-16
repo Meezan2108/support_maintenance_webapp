@@ -1,0 +1,56 @@
+.btn-xs,
+.btn-group-xs > .btn {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.7rem;
+    border-radius: 0.1em;
+}
+
+.btn-xs {
+    width: 25px;
+    text-align: center;
+}
+
+.navbar-brand img {
+    height: 25px;
+    margin-top: -3px;
+    margin-right: 5px;
+}
+
+.bg-light-green {
+    background: #800000;
+}
+
+
+.bg-bts-copyright {
+    border-top: 2px solid #5d100a;
+}
+
+.sb-sidenav-menu .nav-link {
+    font-family: Roboto;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.15rem;
+    letter-spacing: 0em;
+    color: #ffffff!important;
+    padding: 6px;
+    margin: 0px 10px;
+}
+
+.sb-sidenav-menu .nav-link.active,
+.sb-sidenav-menu .nav-link:hover {
+    background: #5d100a;
+}
+
+.sb-sidenav-menu .nav-link.active .sb-nav-link-icon,
+.sb-sidenav-menu .nav-link .sb-nav-link-icon {
+    color: #ffffff!important;
+}
+
+.sb-sidenav-menu-nested .nav-link {
+    padding-left: 1.9rem;
+}
+
+
+.bts-copyright {
+    font-size: 12px;
+}

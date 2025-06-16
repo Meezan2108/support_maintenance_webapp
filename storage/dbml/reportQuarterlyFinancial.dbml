@@ -1,0 +1,221 @@
+
+Table "proposal" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "propsal_type" INT [not null]
+  "ref_type_of_funding_id" NVARCHAR(255) [not null]
+  "project_leader_type" INT [not null]
+  "project_title" NVARCHAR(255) [not null]
+  "project_number" NVARCHAR(255) [not null]
+  "project_leader_name" NVARCHAR(255) [not null]
+  "project_leader_nric" NVARCHAR(255) [not null]
+  "position" NVARCHAR(255) [not null]
+  "grade" NVARCHAR(255) [not null]
+  "working_address" NVARCHAR(255) [not null]
+  "keywords" NVARCHAR(255) [not null]
+  "specific_objective" NVARCHAR(255) [not null]
+  "ref_research_type_id" INT [not null]
+  "ref_research_cluster_id" INT [not null]
+  "ref_seo_category_id" INT [not null]
+  "ref_seo_group_id" INT [not null]
+  "ref_seo_area_id" INT [not null]
+
+  "research_location" NVARCHAR(255) [not null]
+  "project_summary" NVARCHAR(max) [not null]
+  "project_statement" NVARCHAR(max) [not null]
+  "hypothesis" NVARCHAR(max) [not null]
+  "research_question" NVARCHAR(max) [not null]
+  "literatur_review" NVARCHAR(max) [not null]
+  "relevance_goverment_policy" NVARCHAR(max) [not null]
+  "reference" NVARCHAR(max) [not null]
+  "related_research" NVARCHAR(max) [not null]
+  "research_methodolgy" NVARCHAR(max) [not null]
+
+  "risk_factor" NVARCHAR(max) [not null]
+  "risk_technical" NVARCHAR(max) [not null]
+  "risk_timing" NVARCHAR(max) [not null]
+  "risk_budget" NVARCHAR(max) [not null]
+
+  "schedule_start_date" DATE [not null]
+  "schedule_completion_date" DATE [not null]
+  "schedule_duration" INT [not null]
+
+  "economic_contributions" NVARCHAR(max) [not null]
+  "approval_status" INT [not null]
+  "project_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  user_id
+  ref_type_of_funding_id
+}
+}
+
+
+
+Table "report_quarterly_financial" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "total_recieved" BIGINT [not null]
+  "total_expenditure" BIGINT
+  "year" INT [not null]
+  "quarter" INT [not null]
+  "is_inline_plan" INT [not null]
+  "reasons" NVARCHAR(max) [null]
+  "proposed_action" NVARCHAR(max) [null]
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_id
+  }
+}
+
+
+Table "report_qf_detail" {
+  "id" BIGINT [not null]
+  "report_quarterly_financial_id" BIGINT [not null]
+  "ref_project_cost_series_id" BIGINT [not null]
+  "total_approved" BIGINT [not null]
+  "total_allocation" BIGINT [not null]
+  "total_cumulative" BIGINT [not null]
+
+  Indexes {
+    id [pk]
+    report_quarterly_financial_id
+    ref_project_cost_series_id
+  }
+}
+
+
+Table "ref_project_cost_series" {
+  "id" BIGINT [not null]
+  "act_code" NVARCHAR(255) [not null]
+  "jseries_code" NVARCHAR(255) [not null]
+  "vseries_code" NVARCHAR(255) [not null]
+  "sort" NVARCHAR(255) [not null]
+  "description" NVARCHAR(255) [not null]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "approvable" {
+  "id" BIGINT [not null]
+  "approvable_type" NVARCHAR(255) [not null]
+  "approvable_id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+  "status" INT [not null]
+  "comments" NVARCHAR(max)
+  "options" NVARCHAR(max)
+  "date" DATE [not null]
+  "version" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    approvable_type
+    approvable_id
+  }
+}
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(255) [default: NULL]
+  "division" NVARCHAR(255) [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "position" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: users.id < model_has_roles.model_id
+
+Table "model_has_roles" {
+  "role_id" BIGINT [not null]
+  "model_type" NVARCHAR(255) [not null]
+  "model_id" BIGINT [not null]
+
+Indexes {
+  (model_id, model_type, role_id) [pk]
+}
+}
+
+Ref: roles.id < model_has_roles.role_id
+
+Table "roles" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: "roles"."id" < "approvable"."role_id"
+
+Ref: "users"."id" < "approvable"."user_id"
+
+
+Ref: "proposal"."id" < "report_quarterly_financial"."proposal_id"
+
+Ref: "report_quarterly_financial"."id" < "approvable"."approvable_id"
+
+Ref: "users"."id" < "report_quarterly_financial"."created_by"
+
+Ref: "users"."id" < "report_quarterly_financial"."updated_by"
+
+Ref: "users"."id" < "report_quarterly_financial"."deleted_by"
+
+Ref: "users"."id" < "approvable"."created_by"
+
+Ref: "users"."id" < "approvable"."updated_by"
+
+Ref: "users"."id" < "approvable"."deleted_by"
+
+Ref: "report_quarterly_financial"."id" < "report_qf_detail"."report_quarterly_financial_id"
+
+Ref: "ref_project_cost_series"."id" < "report_qf_detail"."ref_project_cost_series_id"

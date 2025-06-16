@@ -1,0 +1,31 @@
+
+.navbar-brand img.brand-image {
+    height: 37px;
+    margin-top: -3px;
+    margin-right: 13px;
+}
+
+.brand-label {
+    font-size: 0.8rem;
+    line-height: 0.95rem;
+    color: #212121;
+    font-weight: 600;
+    font-family: Roboto;
+    letter-spacing: -0.037em;
+}
+
+.profile-picture {
+    width: 24px;
+    height: 24px;
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-nav .nav-link .material-icons {
+    /* height: 50px; */
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}

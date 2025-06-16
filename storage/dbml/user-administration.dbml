@@ -1,0 +1,157 @@
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(64) [default: NULL]
+  "staf_id" NVARCHAR(64) [default: NULL]
+  "ref_division_id" INT [default: NULL]
+  "ref_position_id" INT [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "picture" NVARCHAR(max) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  staf_id
+  ref_division_id
+  ref_position_id
+}
+}
+
+Ref: users.id < model_has_roles.model_id
+
+Table "model_has_roles" {
+  "role_id" BIGINT [not null]
+  "model_type" NVARCHAR(255) [not null]
+  "model_id" BIGINT [not null]
+
+Indexes {
+  (model_id, model_type, role_id) [pk]
+}
+}
+
+Ref: roles.id < model_has_roles.role_id
+
+Table "roles" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: roles.id < role_has_permissions.role_id
+
+Table "role_has_permissions" {
+  "permission_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+
+Indexes {
+  (permission_id, role_id) [pk]
+}
+}
+
+Ref: permissions.id < role_has_permissions.permission_id
+
+Table "permissions" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "menu" {
+  "id" BIGINT [not null]
+  "parent_id" INT [not null]
+  "code" NVARCHAR(255) [not null]
+  "name" NVARCHAR(255) [not null]
+  "icon" NVARCHAR(255) [not null]
+  "description" NVARCHAR(max) [not null]
+  "order" NVARCHAR(255) [not null]
+  "type" INT [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: menu.id < menu_has_permission.menu_id
+
+Table "menu_has_permission" {
+  "permission_id" BIGINT [not null]
+  "menu_id" BIGINT [not null]
+
+  Indexes {
+    (permission_id, menu_id) [pk]
+  }
+}
+
+Ref: permissions.id < menu_has_permission.permission_id
+
+
+Table "ref_division" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "code2" NVARCHAR(64)
+  "description" NVARCHAR(255)
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+    code2 [unique]
+  }
+}
+
+
+Table "ref_position" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255)
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+
+
+Ref: "ref_position"."id" < "users"."ref_position_id"
+
+Ref: "ref_division"."id" < "users"."ref_division_id"

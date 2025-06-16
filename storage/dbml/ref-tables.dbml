@@ -1,0 +1,284 @@
+
+Table "ref_seo_sector" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Table "ref_seo_area" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_group_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+  ref_seo_group_id
+}
+}
+
+Table "ref_seo_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_sector_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_seo_group" {
+  "id" BIGINT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_seo_category_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+  ref_seo_category_id
+}
+}
+
+Ref: "ref_seo_category"."id" < "ref_seo_group"."ref_seo_category_id"
+
+Ref: "ref_seo_group"."id" < "ref_seo_area"."ref_seo_group_id"
+
+Ref: "ref_seo_sector"."id" < "ref_seo_category"."ref_seo_sector_id"
+
+
+Table "ref_for_area" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_for_group_id" INT [default: NULL]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_for_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Table "ref_for_group" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "ref_for_category_id" INT
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+  ref_for_category_id
+}
+}
+
+
+Ref: "ref_for_group"."id" < "ref_for_area"."ref_for_group_id"
+
+Ref: "ref_for_category"."id" < "ref_for_group"."ref_for_category_id"
+
+
+
+Table "ref_research_cluster" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Table "ref_research_type" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+
+Table "ref_position" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255)
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+
+Table "ref_division" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "code2" NVARCHAR(64)
+  "description" NVARCHAR(255)
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+    code2 [unique]
+  }
+}
+
+
+Table "ref_project_cost_series" {
+  "id" BIGINT [not null]
+  "act_code" NVARCHAR(255) [not null]
+  "jseries_code" NVARCHAR(255) [not null]
+  "vseries_code" NVARCHAR(255) [not null]
+  "sort" NVARCHAR(255) [not null]
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+
+Table "ref_type_of_funding" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "type" INT [not null] // trf / external fund
+  "description" NVARCHAR(255) [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+  }
+}
+
+
+
+Table "ref_target_kpi_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "parent_id" INT [null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+
+Table "ref_patent" {
+  "id" BIGINT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "detail" NVARCHAR(max) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+
+Table "ref_pub_type" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+
+
+Table "ref_other_document" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}

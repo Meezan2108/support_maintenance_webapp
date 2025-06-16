@@ -1,0 +1,81 @@
+.label-size {
+    font-size: 0.875rem;
+    line-height: 1.2rem;
+}
+
+.font-error {
+    font-size: 0.8rem;
+}
+
+.font-small {
+    font-size: 0.8rem;
+}
+
+.border-error {
+    border: 1px solid red !important;
+}
+
+.select-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 100px;
+    border: 1px dashed #939BA2;
+    color: #939BA2;
+    overflow: hidden;
+    position: relative;
+}
+
+.preview-picture {
+    width:100%;
+}
+
+.label-pointer {
+    cursor: pointer;
+}
+
+.material-icons {
+    vertical-align: middle;
+    margin-top: -4px;
+}
+
+.rounded-06 {
+    border-radius: 0.6rem !important;
+}
+
+.form-table-action-column {
+    width: 70px;
+}
+
+.custom-position-relative {
+    position: relative;
+}
+
+.custom-input-unit {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding: 0.375rem 0.75rem;
+    margin-right: 10px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.content-editor-show {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.form-check .form-check-show {
+    float: left;
+    margin-left: -1.5em;
+    margin-top: 0em;
+}
+
+label > .is-required {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    color: red;
+}

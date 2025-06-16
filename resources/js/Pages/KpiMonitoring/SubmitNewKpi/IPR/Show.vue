@@ -1,0 +1,137 @@
+<script setup>
+import { Head } from "@inertiajs/vue3";
+
+import VHeaderBreadcrumb from "@/Shared/VHeaderBreadcrumb.vue";
+
+import VDevider from "@/Shared/VDevider.vue";
+import VInputReadonlyWithLabel from "@/Shared/Form/VInputReadonlyWithLabel.vue";
+import VTitleWithBackLink from "@/Shared/VTitleWithBackLink.vue";
+
+import _ from "lodash";
+import VSingleCommentShow from "../../../../Shared/KpiMonitoring/VSingleCommentShow.vue";
+import VListOldFileShow from "@/Pages/KpiMonitoring/SubmitNewKpi/_partials/VListOldFileShow.vue";
+
+const props = defineProps({
+    title: String,
+    additional: Object,
+});
+
+const { urlIndex, initValue, file, filters } = props.additional;
+
+const breadcrumbs = [
+    {
+        url: "#",
+        label: "R&D LKM KPI Monitoring",
+    },
+    {
+        url: urlIndex,
+        label: "Intellectual Property Right",
+    },
+    {
+        url: "#",
+        label: "View Intellectual Property Right",
+    },
+];
+</script>
+
+<template>
+    <Head>
+        <title>{{ title }}</title>
+    </Head>
+
+    <div class="p-3">
+        <VHeaderBreadcrumb :breadcrumbs="breadcrumbs" />
+
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <VTitleWithBackLink
+                        :href="urlIndex"
+                        :filters="filters ?? {}"
+                    >
+                        View Intellectual Property Right
+                    </VTitleWithBackLink>
+                </div>
+                <VDevider class="mb-4" />
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="date"
+                            label="Date"
+                            :value="initValue.date"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="output"
+                            label="Output"
+                            :value="initValue.output"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="user_id"
+                            label="Project Leader"
+                            :value="initValue.kpi_achievement?.user?.name"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="ref_patent_id"
+                            label="Type of IPRs"
+                            :value="initValue.patent.description"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="project_number"
+                            label="Project Number"
+                            :value="initValue.proposal?.project_number"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <VInputReadonlyWithLabel
+                            elId="project_title"
+                            label="Project Title"
+                            :value="initValue.proposal?.project_title"
+                            :widthLabel="3"
+                            :widthInput="9"
+                        />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <VListOldFileShow :value="file" />
+                    </div>
+                </div>
+
+                <VDevider class="mb-4" />
+
+                <div id="comments">
+                    <div class="underline-header mt-2 mb-3">
+                        <h5>Comments</h5>
+                    </div>
+
+                    <VSingleCommentShow :value="initValue.kpi_achievement" />
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

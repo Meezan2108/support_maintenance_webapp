@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddFieldYearQuarterToImportedGermplasmTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('imported_germplasm', function (Blueprint $table) {
+            $table->integer("quarter")->after("date")->nullable();
+            $table->integer("year")->after("date")->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('imported_germplasm', function (Blueprint $table) {
+            $table->dropColumn("quarter");
+            $table->dropColumn("year");
+        });
+    }
+}

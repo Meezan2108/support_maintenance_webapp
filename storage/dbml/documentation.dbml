@@ -1,0 +1,81 @@
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(64) [default: NULL]
+  "staf_id" NVARCHAR(64) [default: NULL]
+  "ref_division_id" INT [default: NULL]
+  "ref_position_id" INT [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "picture" NVARCHAR(max) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  staf_id
+  ref_division_id
+  ref_position_id
+}
+}
+
+
+Table "documentation" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [null]
+  "ref_other_document_id" INT [not null]
+  "date" DATE
+  "description" NVARCHAR(255) [not null]
+  "file" NVARCHAR(max) [null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  user_id
+  ref_other_document_id
+}
+}
+
+
+Table "ref_other_document" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: "ref_other_document"."id" < "documentation"."ref_other_document_id"
+
+Ref: "users"."id" < "documentation"."user_id"
+
+Ref: "users"."id" < "documentation"."created_by"
+
+Ref: "users"."id" < "documentation"."updated_by"
+
+Ref: "users"."id" < "documentation"."deleted_by"

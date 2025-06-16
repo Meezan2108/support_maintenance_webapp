@@ -1,0 +1,13 @@
+@import "../../node_modules/vue-multiselect/dist/vue-multiselect.css";
+
+@import "./vendor/dataTables.bootstrap5.css";
+
+
+@import "./panel/global.css";
+@import "./panel/navbar.css";
+@import "./panel/form.css";
+@import "./panel/vue-multiselect.css";
+@import "./panel/comment.css";
+@import "./panel/notification.css";
+
+@import "./Shared/VTab.css";

@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: crims
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: crims
+    container_name: crims-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - crims
+
+  nginx:
+    image: nginx:alpine
+    container_name: crims-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - crims
+
+  sql:
+    image: mcr.microsoft.com/azure-sql-edge
+    environment:
+      SA_PASSWORD: "abc12345"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1430:1433"
+    networks:
+      - crims
+
+networks:
+  crims:

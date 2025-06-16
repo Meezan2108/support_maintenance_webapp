@@ -1,0 +1,20 @@
+
+.notif-icon {
+    display: flex;
+    border-radius: 50%;
+    background: #ccc;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    flex: 0 0 45px;
+}
+
+.bg-unread {
+    background: #fff895;
+    color: #a8a24f;
+}
+.bg-read {
+    background: #ddd;
+    color: #959595;
+}

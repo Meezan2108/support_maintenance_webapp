@@ -1,0 +1,193 @@
+
+Table "proposal" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "propsal_type" INT [not null]
+  "ref_type_of_funding_id" NVARCHAR(255) [not null]
+  "project_leader_type" INT [not null]
+  "project_title" NVARCHAR(255) [not null]
+  "project_number" NVARCHAR(255) [not null]
+  "project_leader_name" NVARCHAR(255) [not null]
+  "project_leader_nric" NVARCHAR(255) [not null]
+  "position" NVARCHAR(255) [not null]
+  "grade" NVARCHAR(255) [not null]
+  "working_address" NVARCHAR(255) [not null]
+  "keywords" NVARCHAR(255) [not null]
+  "specific_objective" NVARCHAR(255) [not null]
+  "ref_research_type_id" INT [not null]
+  "ref_research_cluster_id" INT [not null]
+  "ref_seo_category_id" INT [not null]
+  "ref_seo_group_id" INT [not null]
+  "ref_seo_area_id" INT [not null]
+
+  "research_location" NVARCHAR(255) [not null]
+  "project_summary" NVARCHAR(max) [not null]
+  "project_statement" NVARCHAR(max) [not null]
+  "hypothesis" NVARCHAR(max) [not null]
+  "research_question" NVARCHAR(max) [not null]
+  "literatur_review" NVARCHAR(max) [not null]
+  "relevance_goverment_policy" NVARCHAR(max) [not null]
+  "reference" NVARCHAR(max) [not null]
+  "related_research" NVARCHAR(max) [not null]
+  "research_methodolgy" NVARCHAR(max) [not null]
+
+  "risk_factor" NVARCHAR(max) [not null]
+  "risk_technical" NVARCHAR(max) [not null]
+  "risk_timing" NVARCHAR(max) [not null]
+  "risk_budget" NVARCHAR(max) [not null]
+
+  "schedule_start_date" DATE [not null]
+  "schedule_completion_date" DATE [not null]
+  "schedule_duration" INT [not null]
+
+  "economic_contributions" NVARCHAR(max) [not null]
+  "approval_status" INT [not null]
+  "project_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+Indexes {
+  id [pk]
+  user_id
+  ref_type_of_funding_id
+}
+}
+
+Table "proposal_milestone" {
+  "id" BIGINT [not null]
+  "proposal_id" BIGINT [not null]
+  "activities" NVARCHAR(max)
+  "from" DATE
+  "to" DATE
+  "is_achieved" INT [null]
+  "completion_date" DATE [null]
+  "order" INT [not null]
+
+Indexes {
+  id [pk]
+  proposal_id
+}
+}
+
+
+Table report_milestone {
+  "id" BIGINT [not null]
+  "proposal_milestone_id" BIGINT [not null]
+
+  "ipr" NVARCHAR(max) [null]
+  "publication" NVARCHAR(max) [null]
+  "expertise_development" NVARCHAR(max) [null]
+  "prototype" NVARCHAR(max) [null]
+  "commercialisation" NVARCHAR(max) [null]
+
+  "comments" NVARCHAR(max)
+
+  "approval_status" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+
+  Indexes {
+    id [pk]
+    proposal_milestone_id
+  }
+}
+
+
+
+Table "approvable" {
+  "id" BIGINT [not null]
+  "approvable_type" NVARCHAR(255) [not null]
+  "approvable_id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "role_id" BIGINT [not null]
+  "status" INT [not null]
+  "comments" NVARCHAR(max)
+  "options" NVARCHAR(max)
+  "date" DATE [not null]
+  "version" INT [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    approvable_type
+    approvable_id
+  }
+}
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(255) [default: NULL]
+  "division" NVARCHAR(255) [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "position" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: users.id < model_has_roles.model_id
+
+Table "model_has_roles" {
+  "role_id" BIGINT [not null]
+  "model_type" NVARCHAR(255) [not null]
+  "model_id" BIGINT [not null]
+
+Indexes {
+  (model_id, model_type, role_id) [pk]
+}
+}
+
+Ref: roles.id < model_has_roles.role_id
+
+Table "roles" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "guard_name" NVARCHAR(255) [not null]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+Ref: "proposal"."id" < "proposal_milestone"."proposal_id"
+
+Ref: "proposal_milestone"."id" < "report_milestone"."proposal_milestone_id"
+
+Ref: "report_milestone"."id" < "approvable"."approvable_id"
+
+Ref: "roles"."id" < "approvable"."role_id"
+
+Ref: "users"."id" < "approvable"."user_id"

@@ -1,0 +1,80 @@
+
+
+Table "users" {
+  "id" BIGINT [not null]
+  "name" NVARCHAR(255) [not null]
+  "code" NVARCHAR(255) [default: NULL]
+  "division" NVARCHAR(255) [default: NULL]
+  "institution" NVARCHAR(255) [default: NULL]
+  "position" NVARCHAR(255) [default: NULL]
+  "grade" NVARCHAR(255) [default: NULL]
+  "tel_no" NVARCHAR(255) [default: NULL]
+  "fax_no" NVARCHAR(255) [default: NULL]
+  "email" NVARCHAR(255) [not null]
+  "email_verified_at" DATETIME [default: NULL]
+  "password" NVARCHAR(255) [default: NULL]
+  "status" INT [not null, default: "1"]
+  "remember_token" NVARCHAR(100) [default: NULL]
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+Indexes {
+  id [pk]
+}
+}
+
+
+Table "target_kpi" {
+  "id" BIGINT [not null]
+  "user_id" BIGINT [not null]
+  "year" INT [not null]
+  "period" INT [not null]
+  "category_id" INT [not null]
+  "sub_category_id" INT [not null]
+  "target" INT [not null]
+  "date" DATE [not null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+  "created_by" BIGINT [default: NULL]
+  "updated_by" BIGINT [default: NULL]
+  "deleted_by" BIGINT [default: NULL]
+
+  Indexes {
+    id [pk]
+    user_id
+  }
+}
+
+
+Table "ref_target_kpi_category" {
+  "id" INT [not null]
+  "code" NVARCHAR(64) [not null]
+  "description" NVARCHAR(255) [not null]
+  "parent_id" INT [null]
+
+  "created_at" DATETIME [default: NULL]
+  "updated_at" DATETIME [default: NULL]
+  "deleted_at" DATETIME [default: NULL]
+
+  Indexes {
+    id [pk]
+    code [unique]
+  }
+}
+
+Ref: "users"."id" < "target_kpi"."user_id"
+
+Ref: "users"."id" < "target_kpi"."created_by"
+
+Ref: "users"."id" < "target_kpi"."updated_by"
+
+Ref: "users"."id" < "target_kpi"."deleted_by"
+
+Ref: "ref_target_kpi_category"."id" < "target_kpi"."category_id"
+
+Ref: "ref_target_kpi_category"."id" < "target_kpi"."sub_category_id"
+
+Ref: "ref_target_kpi_category"."id" < "ref_target_kpi_category"."parent_id"
