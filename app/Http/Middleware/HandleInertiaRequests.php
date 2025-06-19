@@ -56,7 +56,9 @@ class HandleInertiaRequests extends Middleware
             "appBaseUrl" => url('/'),
             "authUser" => $user ? (new UserResource($user))->toArray($request) : null,
             "flash" => [
-                "message" => fn () => $request->session()->get('message')
+            'success' => fn () => $request->session()->get('success'),
+            'error' => fn () => $request->session()->get('error'),
+            "message" => fn () => $request->session()->get('message')
             ],
             'recaptchav2_sitekey' => config('recaptchav2.sitekey'),
         ]);

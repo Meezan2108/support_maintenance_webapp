@@ -1,13 +1,30 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Head } from "@inertiajs/vue3";
 import { usePage, router } from '@inertiajs/vue3';
-import { Pencil, Trash2, Plus, Info } from 'lucide-vue-next';
+import { Check, Pencil, Trash2, Plus, Info } from 'lucide-vue-next';
 
+const deleteMode = ref(false);  // New reactive state for delete mode
+
+onMounted(() => {
+  const page = usePage();
+  if (page.props.flash?.success) {
+    flash.value = page.props.flash.success;
+    showNotification.value = true;
+
+    // Auto-close after 4 seconds
+    setTimeout(() => {
+      showNotification.value = false;
+    }, 4000);
+  }
+});
+
+const selectedTickets = ref([]);
+const flash = ref('');
+const showNotification = ref(false);
 const currentPage = ref(1);
 const perPage = 10;
 const records = usePage().props.records;
-const search = ref('');
 const filters = ref({
   ticket_id: '',
   project_name: '',
@@ -54,6 +71,14 @@ function formatDate(dateString) {
   });
 }
 
+function toggleAll(event) {
+  if (event.target.checked) {
+    selectedTickets.value = filteredRecords.value.map(r => r.id);
+  } else {
+    selectedTickets.value = [];
+  }
+}
+
 function viewRecord(id) {
   router.get(route('support-maintenance.show', id));
 }
@@ -80,8 +105,65 @@ function deleteRecord(id) {
   }
 }
 
+function bulkDelete() {
+  if (!selectedTickets.value.length) return;
+
+  if (confirm(`Delete ${selectedTickets.value.length} selected tickets?`)) {
+    router.post(route('support-maintenance.bulkDestroy'), {
+      ids: selectedTickets.value,
+    }, {
+      preserveScroll: true,
+      onSuccess: () => {
+        flash.value = 'Selected tickets deleted.';
+        showNotification.value = true;
+        selectedTickets.value = [];
+        deleteMode.value = false;
+        setTimeout(() => {
+          router.visit(route('support-maintenance.index'), {
+            preserveScroll: true,
+            replace: true,
+          });
+        }, 1500);
+      },
+      onError: () => {
+        alert('Bulk delete failed.');
+      }
+    });
+  }
+}
+
 function createRecord() {
   router.get(route('support-maintenance.create'));
+}
+
+function markAsDone(id) {
+  if (confirm('Mark this ticket as Done?')) {
+    router.put(route('support-maintenance.update', id), {
+      status: 'Done',
+    }, {
+      preserveScroll: true,
+      onSuccess: () => {
+        flash.value = 'Ticket marked as Done.';
+        showNotification.value = true;
+
+        setTimeout(() => {
+          showNotification.value = false;
+          router.visit(route('support-maintenance.index'), {
+            preserveScroll: true,
+            replace: true,
+          });
+        }, 900);
+      },
+      onError: () => {
+        alert('Failed to mark ticket as Done.');
+      }
+    });
+  }
+}
+
+function cancelDelete() {
+  deleteMode.value = false;
+  selectedTickets.value = [];
 }
 </script>
 
@@ -90,18 +172,52 @@ function createRecord() {
     <title>Support & Maintenance</title>
   </Head>
 
+  <div v-if="showNotification" class="notification success">
+    {{ flash }}
+  </div>
+
   <div class="page-wrapper">
     <div class="header">
       <h1>Support & Maintenance Tickets</h1>
-      <button @click="createRecord" class="create-btn">
-        <Plus class="icon" /> Create Ticket
-      </button>
+
+      <div class="header-buttons">
+        <button
+          v-if="!deleteMode"
+          @click="deleteMode = true"
+          class="create-btn delete"
+        >
+          <Trash2 class="icon" /> Delete Tickets
+        </button>
+
+        <div v-else>
+          <button
+            @click="bulkDelete"
+            class="create-btn confirm-delete"
+            :disabled="selectedTickets.length === 0"
+          >
+            <Trash2 class="icon" /> Confirm Tickets Delete ({{ selectedTickets.length }})
+          </button>
+
+          <button @click="cancelDelete" class="create-btn cancel" style="margin-left: 1rem;">
+            Cancel Delete
+          </button>
+        </div>
+
+        <button
+          @click="createRecord"
+          class="create-btn primary"
+          style="margin-left: auto;"
+        >
+          <Plus class="icon" /> Create Ticket
+        </button>
+      </div>
     </div>
 
     <div class="card">
       <table class="record-table">
         <thead>
           <tr>
+            <th v-if="deleteMode"><input type="checkbox" @change="toggleAll($event)" /></th>
             <th>Actions</th>
             <th>Ticket ID</th>
             <th>Request Date</th>
@@ -115,13 +231,20 @@ function createRecord() {
         </thead>
         <tbody>
           <tr v-if="filteredRecords.length === 0">
-            <td :colspan="9" class="no-data">
+            <td :colspan="deleteMode ? 10 : 9" class="no-data">
               <Info class="no-data-icon" />
               No records found.
             </td>
           </tr>
 
           <tr v-for="record in paginatedRecords" :key="record.id">
+            <td v-if="deleteMode">
+              <input
+                type="checkbox"
+                :value="record.id"
+                v-model="selectedTickets"
+              />
+            </td>
             <td class="actions-cell">
               <div class="action-btns">
                 <button @click="viewRecord(record.id)" class="icon-btn yellow" title="View">
@@ -132,6 +255,14 @@ function createRecord() {
                 </button>
                 <button @click="deleteRecord(record.id)" class="icon-btn red" title="Delete">
                   <Trash2 class="icon" />
+                </button>
+                <button
+                  v-if="record.status?.toLowerCase() === 'pending'"
+                  @click="markAsDone(record.id)"
+                  class="icon-btn green"
+                  title="Mark as Done"
+                >
+                  <Check class="icon" />
                 </button>
               </div>
             </td>
@@ -188,22 +319,76 @@ function createRecord() {
   color: #2c3e50;
 }
 
-.create-btn {
+.header-buttons {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  background-color: #1d4ed8;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  gap: 0.4rem;
-  transition: background 0.2s;
+  flex-wrap: wrap;
 }
 
-.create-btn:hover {
-  background-color: #2563eb;
+.create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  min-width: 140px;
+}
+
+.create-btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Primary (Create Ticket) */
+.create-btn.primary {
+  background-color: #2563eb; /* Blue */
+  color: #fff;
+}
+.create-btn.primary:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+/* Delete record button */
+.create-btn.delete {
+  background-color: #dc2626; /* Red */
+  color: #fff;
+}
+.create-btn.delete:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+/* Confirm Delete - same as delete but slightly bolder */
+.create-btn.confirm-delete {
+  background-color: #991b1b; /* Darker red */
+  color: #fff;
+  font-weight: 700;
+}
+.create-btn.confirm-delete:hover:not(:disabled) {
+  background-color: #7f1d1d;
+}
+
+/* Cancel Delete button */
+.create-btn.cancel {
+  background-color: #6b7280; /* Gray */
+  color: #fff;
+}
+.create-btn.cancel:hover:not(:disabled) {
+  background-color: #4b5563;
+}
+
+/* Disabled state for any button */
+.create-btn:disabled {
+  background-color: #9ca3af; /* Gray lighter */
+  cursor: not-allowed;
+  color: #f3f4f6;
 }
 
 .card {
@@ -235,14 +420,14 @@ function createRecord() {
 
 .actions-cell {
   padding: 0.5rem 0.75rem;
-  text-align: center;
+  text-align: left;
   vertical-align: middle;
 }
 
 .action-btns {
   display: flex;
   gap: 0.4rem;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -276,6 +461,11 @@ function createRecord() {
 .icon-btn.yellow {
   background: #fffacc;
   color: #856404;
+}
+
+.icon-btn.green {
+  background: #d4edda;
+  color: #155724;
 }
 
 .icon-btn:hover {
@@ -350,5 +540,32 @@ function createRecord() {
   height: 20px;
   vertical-align: middle;
   margin-right: 0.5rem;
+}
+
+.notification {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  z-index: 1000;
+  animation: slide-in 0.4s ease-out forwards;
+}
+
+.notification.success {
+  background-color: #38a169; /* Green */
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
 }
 </style>

@@ -120,15 +120,55 @@ public function destroy($id)
 }
 
 
+// public function update(Request $request, $id)
+// {
+//     $ticket = SupportMaintenance::findOrFail($id);
+
+//     $validated = $request->validate([
+//         'project_id' => 'required|exists:projects,id',
+//         'client_id' => 'required|exists:clients,id',
+//         'request_date' => 'required|date',
+//         //'reported_by' => 'required|string',
+//         'reported_by' => 'required|string',
+//         'department_unit' => 'nullable|string',
+//         'issue_type_id' => 'required|exists:issue_types,id',
+//         'description' => 'nullable|string',
+//         'reported_to' => 'required|exists:st_members,id',
+//         'priority' => 'required|string',
+//         'status' => 'required|string',
+//         'starting_date' => 'nullable|date',
+//         'completion_date' => 'nullable|date',
+//         'duration_days' => 'nullable|integer',
+//         'solution_summary' => 'nullable|string',
+//         'follow_up_required' => 'required|in:Yes,No',
+//         'remarks' => 'nullable|string',
+//     ]);
+
+//     $ticket->update($validated);
+
+//     //return redirect()->route('support-maintenance.index')->with('success', 'Ticket updated successfully.');
+//     // Redirect to show page with success flash message
+//     return redirect()->route('support-maintenance.show', $ticket->id)
+//                      ->with('success', 'Ticket information has been updated.');
+
+// }
+
 public function update(Request $request, $id)
 {
     $ticket = SupportMaintenance::findOrFail($id);
 
+    if ($request->has('status') && $request->keys() === ['status']) {
+        $request->validate(['status' => 'required|in:Pending,Done,Cancelled']);
+        $ticket->update(['status' => $request->status]);
+
+        return redirect()->route('support-maintenance.index')->with('success', 'Ticket marked as Done.');
+    }
+
+    // Otherwise, do full validation
     $validated = $request->validate([
         'project_id' => 'required|exists:projects,id',
         'client_id' => 'required|exists:clients,id',
         'request_date' => 'required|date',
-        //'reported_by' => 'required|string',
         'reported_by' => 'required|string',
         'department_unit' => 'nullable|string',
         'issue_type_id' => 'required|exists:issue_types,id',
@@ -146,12 +186,10 @@ public function update(Request $request, $id)
 
     $ticket->update($validated);
 
-    //return redirect()->route('support-maintenance.index')->with('success', 'Ticket updated successfully.');
-    // Redirect to show page with success flash message
     return redirect()->route('support-maintenance.show', $ticket->id)
                      ->with('success', 'Ticket information has been updated.');
-
 }
+
 
 
 

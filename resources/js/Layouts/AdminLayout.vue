@@ -3,12 +3,13 @@ import Sidenav from "../Shared/Layouts/Sidenav.vue";
 import Navbar from "../Shared/Layouts/Navbar.vue";
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { router } from '@inertiajs/vue3';
+import FlashNotification from '@/Components/FlashNotification.vue';
 
 // Fallback routes if `route()` helper is unavailable
 const logoutRoute = typeof route === 'function' ? route('logout') : '/logout';
 const loginRoute = typeof route === 'function' ? route('login') : '/login';
 
-const timeoutMinutes = 1; // ⏱️ Set timeout duration here
+const timeoutMinutes = 15; // Set timeout duration here
 const timeLeft = ref(timeoutMinutes * 60); // seconds countdown
 const showTimeoutModal = ref(false);
 
@@ -88,10 +89,12 @@ function formatTime(seconds) {
         </main>
       </div>
 
+        <div>
+        <FlashNotification />
+        </div>
+
       <!-- Live session countdown -->
-      <div
-        style="position: fixed; bottom: 10px; right: 10px; background: #eee; padding: 8px 12px; border-radius: 4px;"
-      >
+      <div style="position: fixed; bottom: 10px; right: 10px; background: #eee; padding: 8px 12px; border-radius: 4px;">
         Session Timeout in: {{ formatTime(timeLeft) }}
       </div>
 

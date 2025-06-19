@@ -32,7 +32,7 @@ onMounted(() => {
     // Auto-hide after 3 seconds
     setTimeout(() => {
       showSuccessMessage.value = false;
-    }, 3000);
+    }, 8000);
   }
 });
 
@@ -42,9 +42,15 @@ onMounted(() => {
 <Head>
     <title>View Support Maintenance</title>
   </Head>
-<div v-if="showSuccessMessage" class="popup-message">
+<!-- <div v-if="showSuccessMessage" class="popup-message">
   {{ successMessage }}
+</div> -->
+
+<div v-if="showSuccessMessage" class="popup-message">
+  <span>{{ successMessage }}</span>
+  <button class="close-btn" @click="showSuccessMessage = false">×</button>
 </div>
+
 
 
   <div class="container">
@@ -281,6 +287,31 @@ textarea {
   padding-left: 0.5rem;
   font-weight: 600;
 }
+
+.popup-message {
+  position: relative;
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 1rem 2rem 1rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popup-message .close-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #065f46;
+  font-weight: bold;
+}
+
 
 
 .popup-message {

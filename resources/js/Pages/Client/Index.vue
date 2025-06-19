@@ -72,9 +72,9 @@ function deleteClient(id) {
   if (confirm("Are you sure you want to delete this client?")) {
     Inertia.delete(route('clients.destroy', id), {
       preserveScroll: true,
-      onSuccess: () => {
-        Inertia.visit(route('clients.index'), { replace: true })
-      },
+      // onSuccess: () => {
+      //   Inertia.visit(route('clients.index'), { replace: true })
+      // },
       onError: (errors) => {
         alert('❌ Failed to delete client.')
         console.error(errors)

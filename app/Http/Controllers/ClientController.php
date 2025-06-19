@@ -88,7 +88,7 @@ class ClientController extends Controller
     $client->delete();
 
     // return redirect()->back()->with('message', 'Client deleted successfully.');
-     return redirect()->route('clients.index')->with('success', 'Client deleted successfully.');
+    return redirect()->route('clients.index')->with('success', 'Client deleted successfully.');
     }
 
 
@@ -113,6 +113,6 @@ class ClientController extends Controller
             $client->correspondents()->create($corr);
         }
 
-        return redirect()->route('clients.index')->with('success', 'Client deleted successfully.');
+        return redirect()->route('clients.index')->with('success', 'Client added successfully.');
     }
 }

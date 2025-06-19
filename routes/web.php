@@ -137,9 +137,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
+Route::put('/projects/{project}/update-status', [ProjectController::class, 'updateStatus'])->name('projects.update-status');
 Route::resource('projects', ProjectController::class);
 
-Route::delete('/support-maintenance/bulk-delete', [SupportMaintenanceController::class, 'bulkDestroy'])->name('support-maintenance.bulkDestroy');
+Route::post('/support-maintenance/bulk-destroy', [SupportMaintenanceController::class, 'bulkDestroy'])
+    ->name('support-maintenance.bulkDestroy');
+
+
+// Route::delete('/support-maintenance/bulk-delete', [SupportMaintenanceController::class, 'bulkDestroy'])->name('support-maintenance.bulkDestroy');
 Route::resource('support-maintenance', SupportMaintenanceController::class);
 
 

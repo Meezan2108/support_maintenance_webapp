@@ -241,13 +241,18 @@ onMounted(() => {
 });
 
 // Submit the form
+// function submit() {
+//   form.put(route('support-maintenance.update', ticket.id), {
+//     onSuccess: () => {
+//       router.visit(route('support-maintenance.show', ticket.id));
+//     },
+//   });
+// }
+
 function submit() {
-  form.put(route('support-maintenance.update', ticket.id), {
-    onSuccess: () => {
-      router.visit(route('support-maintenance.show', ticket.id));
-    },
-  });
+  form.put(route('support-maintenance.update', ticket.id));
 }
+
 </script>
 
 
